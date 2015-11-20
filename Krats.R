@@ -36,3 +36,18 @@ ggplot(Dipo_count, aes(x = period, y = count)) +
   geom_line(aes(color = species)) +
   xlab("Period") +
   ylab("# Individuals")
+
+###
+# Relative abundance of Krats
+###
+
+# relative abundance of dipos by period
+total_dipo_period <- Dipo_count %>% 
+                     group_by(period) %>% 
+                     summarise(total_dipo_period = sum(count))
+rel_ab <- merge(Dipo_count, total_dipo_period, by = "period", all = TRUE)
+relative_abundance <- rel_ab %>% 
+                      mutate(count/total_dipo_period)
+relative_abundance$rel_abund <- relative_abundance$count/total_dipo_period
+names(relative_abundance)[names(relative_abundance) == 'count/total_dipo_period'] <- 'rel_abund'
+
