@@ -46,10 +46,9 @@ ggplot(Dipo_count_period, aes(x = period, y = count)) +
 total_dipo_period <- Dipo_count_period %>% 
                      group_by(period) %>% 
                      summarise(total_dipo_period = sum(count))
-rel_ab <- merge(Dipo_count_period, total_dipo_period, by = "period", all = TRUE)
-relative_abundance <- rel_ab %>% 
-                      mutate(count/total_dipo_period)
-names(relative_abundance)[names(relative_abundance) == 'count/total_dipo_period'] <- 'rel_abund'
+rel_ab_period <- merge(Dipo_count_period, total_dipo_period, by = "period", all = TRUE)
+relative_abundance_per <- rel_ab_period %>% 
+                      mutate(rel_abund = count/total_dipo_period)
 
 # relative abundance of dipos by year
 Dipo_count_year <- select(surveys, yr, period, species) %>% 
@@ -65,4 +64,4 @@ total_dipo_year <- Dipo_count_year %>%
 rel_ab_yr <- merge(Dipo_count_year, total_dipo_year, by = "yr", all = TRUE)
 relative_abundance_yr <- rel_ab_yr %>% 
                          mutate(rel_abund = count/total_dipo_year)
-rename(relative_abundance_yr, relative_abund = count/total_dipo_year)
+
