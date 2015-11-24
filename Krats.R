@@ -65,3 +65,27 @@ rel_ab_yr <- merge(Dipo_count_year, total_dipo_year, by = "yr", all = TRUE)
 relative_abundance_yr <- rel_ab_yr %>% 
                          mutate(rel_abund = count/total_dipo_year)
 
+###
+# All dipos grouped by season
+###
+
+Dipos <- filter(surveys, species == 'DM' | species == 'DO' | species == 'DS', period > 0 & period < 437) %>% 
+         arrange(yr, mo, plot, species)
+
+find_season <- function(month){
+  # function putting each month is a seasonal category
+  if (any(month == '1' | month == '2' | month == '3')){
+    season = "1"
+  } else if (any(month == '4' | month == '5' | month == '6')){
+    season = "2"
+  } else if (any(month == '7' | month == '8' | month == '9')){
+    season = "3"
+  } else {
+    season = "4"
+  }
+  return(season)
+} 
+
+# adding a column for season to the data 
+month_list <- as.list(Dipos$mo)
+Dipos$season <- rapply(month_list, find_season)
