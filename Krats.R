@@ -69,6 +69,7 @@ relative_abundance_yr <- rel_ab_yr %>%
 # All dipos grouped by season
 ###
 
+# all dipos in periods before the plot switches
 Dipos <- filter(surveys, species == 'DM' | species == 'DO' | species == 'DS', period > 0 & period < 437) %>% 
          arrange(yr, mo, plot, species)
 
@@ -89,3 +90,8 @@ find_season <- function(month){
 # adding a column for season to the data 
 month_list <- as.list(Dipos$mo)
 Dipos$season <- rapply(month_list, find_season)
+
+# grouping by plot/year/season
+season_per_year <- select(Dipos, yr, season, plot, species) %>% 
+                   group_by(plot, yr, season, species) %>% 
+                   summarise(count = n())
