@@ -95,3 +95,11 @@ Dipos$season <- rapply(month_list, find_season)
 season_per_year <- select(Dipos, yr, season, plot, species) %>% 
                    group_by(plot, yr, season, species) %>% 
                    summarise(count = n())
+
+# adding seasonal relative abundance column
+season_total <- season_per_year %>% 
+  group_by(plot, yr, season) %>% 
+  summarise(season_total = sum(count))
+rel_ab_season <- merge(season_per_year, season_total, by.x = c("plot", "yr", "season"), all = TRUE)
+season_rel_abund <- rel_ab_season %>% 
+  mutate(rel_abund = count/season_total)
