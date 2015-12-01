@@ -111,3 +111,21 @@ ordered <- arrange(yr_season_ID, yr)
 ordered$season_id <- seq_len(nrow(yr_season_ID))
 season_ordered <- merge(seasonal_rel_abund, ordered, by.x = c("yr", "season"), all = TRUE) %>% 
   arrange(yr, season, plot, species)
+
+## Plotting Relative Abundance of Dipos
+library(scales)
+
+# relative abundance of all dipos per period
+ggplot(relative_abundance_per, aes(x = period, y = rel_abund, fill = species)) +
+  geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
+  scale_y_continuous(labels = percent_format())
+
+# relative abundance of all dipos per year
+ggplot(relative_abundance_yr, aes(x = yr, y = rel_abund, fill = species)) +
+  geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
+  scale_y_continuous(labels = percent_format())
+
+# relative abundance of all dipos per plot per season
+ggplot(season_ordered, aes(x = season_id, y = relative_abundance)) +
+  geom_bar(stat = "identity", aes(color = species)) +
+  facet_wrap(~plot, nrow = 6, ncol = 4)
