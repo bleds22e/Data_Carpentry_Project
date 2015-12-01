@@ -103,3 +103,11 @@ season_total <- season_per_year %>%
 rel_ab_season <- merge(season_per_year, season_total, by.x = c("plot", "yr", "season"), all = TRUE)
 season_rel_abund <- rel_ab_season %>% 
   mutate(rel_abund = count/season_total)
+
+# give each year/season combo a unique id
+yr_season_ID <- select(seasonal_rel_abund, yr, season) %>% 
+  distinct() 
+ordered <- arrange(yr_season_ID, yr)
+ordered$season_id <- seq_len(nrow(yr_season_ID))
+season_ordered <- merge(seasonal_rel_abund, ordered, by.x = c("yr", "season"), all = TRUE) %>% 
+  arrange(yr, season, plot, species)
