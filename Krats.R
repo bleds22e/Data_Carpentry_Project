@@ -4,6 +4,7 @@
 # load packages
 library(dplyr)
 library(ggplot2)
+library(scales)
 
 # load data
 surveys <- read.csv("data/surveys.csv", header = TRUE)
@@ -50,6 +51,11 @@ rel_ab_period <- merge(Dipo_count_period, total_dipo_period, by = "period", all 
 relative_abundance_per <- rel_ab_period %>% 
                       mutate(rel_abund = count/total_dipo_period)
 
+# plot relative abundance of all dipos per period
+ggplot(relative_abundance_per, aes(x = period, y = rel_abund, fill = species)) +
+  geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
+  scale_y_continuous(labels = percent_format())
+
 # relative abundance of dipos by year
 Dipo_count_year <- select(surveys, yr, period, species) %>% 
                    filter(species == 'DM' | species == 'DO' | species == 'DS', period > 0) %>% 
@@ -57,13 +63,17 @@ Dipo_count_year <- select(surveys, yr, period, species) %>%
                       # marked by negative period entries
                    group_by(yr, species) %>% 
                    summarise(count = n())
-
 total_dipo_year <- Dipo_count_year %>% 
                    group_by(yr) %>% 
                    summarise(total_dipo_year = sum(count))
 rel_ab_yr <- merge(Dipo_count_year, total_dipo_year, by = "yr", all = TRUE)
 relative_abundance_yr <- rel_ab_yr %>% 
                          mutate(rel_abund = count/total_dipo_year)
+
+# relative abundance of all dipos per year
+ggplot(relative_abundance_yr, aes(x = yr, y = rel_abund, fill = species)) +
+  geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
+  scale_y_continuous(labels = percent_format())
 
 ###
 # All dipos grouped by season
@@ -112,20 +122,7 @@ ordered$season_id <- seq_len(nrow(yr_season_ID))
 season_ordered <- merge(seasonal_rel_abund, ordered, by.x = c("yr", "season"), all = TRUE) %>% 
   arrange(yr, season, plot, species)
 
-## Plotting Relative Abundance of Dipos
-library(scales)
-
-# relative abundance of all dipos per period
-ggplot(relative_abundance_per, aes(x = period, y = rel_abund, fill = species)) +
-  geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
-  scale_y_continuous(labels = percent_format())
-
-# relative abundance of all dipos per year
-ggplot(relative_abundance_yr, aes(x = yr, y = rel_abund, fill = species)) +
-  geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
-  scale_y_continuous(labels = percent_format())
-
-# relative abundance of all dipos per plot per season
+# plot relative abundance of all dipos per plot per season
 ggplot(season_ordered, aes(x = season_id, y = relative_abundance)) +
   geom_bar(stat = "identity", aes(color = species)) +
   facet_wrap(~plot, nrow = 6, ncol = 4)
