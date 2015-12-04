@@ -146,3 +146,24 @@ ggplot(season_ordered, aes(x = season_id, y = relative_abundance)) +
 # save plot output as png
 dev.copy(png, 'rel_abund_dipo_season.png')
 dev.off()
+
+###
+# Explore krat relationship with PBs
+###
+
+# Look at Krats and PBs by period
+PB_count_period <- select(surveys, period, species) %>% 
+  filter(species == 'PB', period > 0) %>% 
+  group_by(period, species) %>% 
+  summarise(count = n())
+
+# want to add zeros when there are no rodents per period
+periods1 <- unique(surveys$period)
+
+fullGrid <- expand.grid(period = periods1)
+fullGrid_krats <- merge(Dipo_count_period, fullGrid, by = c('period'), all = TRUE)
+fullGrid_PB <- merge(PB_count_period, fullGrid, by = c('period'), all = TRUE)
+
+fullGrid_krats$count[is.na(fullGrid_krats$count)] = 0
+fullGrid_PB$count[is.na(fullGrid_PB$count)] = 0
+
