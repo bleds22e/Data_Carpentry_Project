@@ -61,7 +61,7 @@ relative_abundance_per <- rel_ab_period %>%
 
 # plot relative abundance of all dipos per period
 ggplot(relative_abundance_per, aes(x = period, y = rel_abund, fill = species)) +
-  geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
+  geom_bar(postition = 'fill', stat = "identity", bin_width = 6, colour = NA) +
   scale_y_continuous(labels = percent_format())
 
 # save plot output as png
@@ -86,6 +86,10 @@ relative_abundance_yr <- rel_ab_yr %>%
 ggplot(relative_abundance_yr, aes(x = yr, y = rel_abund, fill = species)) +
   geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
   scale_y_continuous(labels = percent_format())
+
+# save plot output as png
+dev.copy(png, 'rel_abund_dipos_year.png')
+dev.off()
 
 ###
 # All dipos grouped by season
@@ -138,3 +142,7 @@ season_ordered <- merge(seasonal_rel_abund, ordered, by.x = c("yr", "season"), a
 ggplot(season_ordered, aes(x = season_id, y = relative_abundance)) +
   geom_bar(stat = "identity", aes(color = species)) +
   facet_wrap(~plot, nrow = 6, ncol = 4)
+
+# save plot output as png
+dev.copy(png, 'rel_abund_dipo_season.png')
+dev.off()
