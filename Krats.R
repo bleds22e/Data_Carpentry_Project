@@ -26,6 +26,10 @@ ggplot(DM_DO_count, aes(x = period, y = count)) +
   xlab("Period") +
   ylab("# Individuals")
 
+# save plot output as png
+dev.copy(png, 'DM_DO_counts_period.png')
+dev.off()
+
 # get counts of DM, DO, and DS by period
 Dipo_count_period <- select(surveys, period, species) %>% 
                      filter(species == 'DM' | species == 'DO' | species == 'DS', period > 0) %>% 
@@ -38,6 +42,10 @@ ggplot(Dipo_count_period, aes(x = period, y = count)) +
   geom_line(aes(color = species)) +
   xlab("Period") +
   ylab("# Individuals")
+
+# save plot output as png
+dev.copy(png, 'dipo_count_by_period.png')
+dev.off()
 
 ###
 # Relative abundance of Krats
@@ -55,6 +63,10 @@ relative_abundance_per <- rel_ab_period %>%
 ggplot(relative_abundance_per, aes(x = period, y = rel_abund, fill = species)) +
   geom_bar(postition = 'fill', stat = "identity", bin_width = 6) +
   scale_y_continuous(labels = percent_format())
+
+# save plot output as png
+dev.copy(png, 'rel_abund_dipos_period.png')
+dev.off()
 
 # relative abundance of dipos by year
 Dipo_count_year <- select(surveys, yr, period, species) %>% 
