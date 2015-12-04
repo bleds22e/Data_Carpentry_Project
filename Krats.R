@@ -157,7 +157,7 @@ PB_count_period <- select(surveys, period, species) %>%
                    group_by(period) %>% 
                    summarise(count = n())
 Krat_count_period <- select(surveys, period, species) %>% 
-                     filter(species == 'DM', species == 'DS', species == 'DO') %>% 
+                     filter(species == 'DM' | species == 'DS' | species == 'DO') %>% 
                      group_by(period) %>% 
                      summarise(count = n())
 
@@ -181,3 +181,10 @@ all_krat_PB <- bind_rows(fullGrid_krats, fullGrid_PB)
 # remove negative periods
 vec <- all_krat_PB$period > 0
 all_krat_PB <- all_krat_PB[vec,]
+
+#plotting all_krat_PB
+ggplot(all_krat_PB, aes(x = period, y = count, color = species)) +
+  geom_point() +
+  geom_line() +
+  xlab("Period") +
+  ylab("# Individuals")
