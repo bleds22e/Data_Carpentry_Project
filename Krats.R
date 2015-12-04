@@ -153,17 +153,31 @@ dev.off()
 
 # Look at Krats and PBs by period
 PB_count_period <- select(surveys, period, species) %>% 
-  filter(species == 'PB', period > 0) %>% 
-  group_by(period, species) %>% 
-  summarise(count = n())
+                   filter(species == 'PB') %>% 
+                   group_by(period) %>% 
+                   summarise(count = n())
+Krat_count_period <- select(surveys, period, species) %>% 
+                     filter(species == 'DM', species == 'DS', species == 'DO') %>% 
+                     group_by(period) %>% 
+                     summarise(count = n())
 
 # want to add zeros when there are no rodents per period
 periods1 <- unique(surveys$period)
 
 fullGrid <- expand.grid(period = periods1)
-fullGrid_krats <- merge(Dipo_count_period, fullGrid, by = c('period'), all = TRUE)
+fullGrid_krats <- merge(Krat_count_period, fullGrid, by = c('period'), all = TRUE)
 fullGrid_PB <- merge(PB_count_period, fullGrid, by = c('period'), all = TRUE)
 
 fullGrid_krats$count[is.na(fullGrid_krats$count)] = 0
 fullGrid_PB$count[is.na(fullGrid_PB$count)] = 0
 
+# add identifying column for plotting
+fullGrid_krats$species <- rep('krat', nrow(fullGrid_krats))
+fullGrid_PB$species <- rep('PB', nrow(fullGrid_PB))
+
+# merging PB and krat dataframes
+all_krat_PB <- bind_rows(fullGrid_krats, fullGrid_PB)
+
+# remove negative periods
+vec <- all_krat_PB$period > 0
+all_krat_PB <- all_krat_PB[vec,]
