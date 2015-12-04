@@ -188,3 +188,7 @@ ggplot(all_krat_PB, aes(x = period, y = count, color = species)) +
   geom_line() +
   xlab("Period") +
   ylab("# Individuals")
+
+# save plot output as png
+dev.copy(png, 'krat_PB_count_period.png')
+dev.off()
