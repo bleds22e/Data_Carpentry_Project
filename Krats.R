@@ -131,15 +131,15 @@ season_rel_abund <- rel_ab_season %>%
   mutate(rel_abund = count/season_total)
 
 # give each year/season combo a unique id
-yr_season_ID <- select(seasonal_rel_abund, yr, season) %>% 
+yr_season_ID <- select(season_rel_abund, yr, season) %>% 
   distinct() 
 ordered <- arrange(yr_season_ID, yr)
 ordered$season_id <- seq_len(nrow(yr_season_ID))
-season_ordered <- merge(seasonal_rel_abund, ordered, by.x = c("yr", "season"), all = TRUE) %>% 
+season_ordered <- merge(season_rel_abund, ordered, by.x = c("yr", "season"), all = TRUE) %>% 
   arrange(yr, season, plot, species)
 
 # plot relative abundance of all dipos per plot per season
-ggplot(season_ordered, aes(x = season_id, y = relative_abundance)) +
+ggplot(season_ordered, aes(x = season_id, y = rel_abund)) +
   geom_bar(stat = "identity", aes(color = species)) +
   facet_wrap(~plot, nrow = 6, ncol = 4)
 
