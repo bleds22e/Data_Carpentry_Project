@@ -200,13 +200,15 @@ dev.copy(png, 'dipos_plants_04_09.png')
 dev.off()
 
 # plotting some of the individual plots to take a better look
+  # still very preliminary
 
 library(RColorBrewer)
-#trying with plot 1
+pdf(file = "dipos_plants_04-09.pdf", width = 6.25, height = 4, onefile = TRUE)
+
+# plot 1
+
 dipos_1 <- filter(dipos_04_09, plot == '1')
 transect_1 <- filter(dipos_pl_per, Plot == '1')
-transect_1$Prop <- as.numeric(transect_1$Prop)
-transect_1$Season <- as.numeric(transect_1$Season)
 
 ggplot(dipos_1, aes(x = season_id, y = rel_abund)) +
   geom_bar(stat = "identity", aes(fill = species)) +
@@ -214,7 +216,7 @@ ggplot(dipos_1, aes(x = season_id, y = rel_abund)) +
   scale_colour_grey() +
   ggtitle("Plot 1")
 
-# plot2
+# plot 2
 
 dipos_2 <- filter(dipos_04_09, plot == '2')
 transect_2 <- filter(dipos_pl_per, Plot == '2')
@@ -311,6 +313,8 @@ ggplot(dipos_22, aes(x = season_id, y = rel_abund)) +
   geom_line(data = transect_22, size = 2, aes(x = Season, y = Prop, color = Type)) +
   scale_colour_grey() +
   ggtitle("Plot 22")
+
+dev.off()
 
 ###
 # Explore krat relationship with PBs
