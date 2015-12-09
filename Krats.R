@@ -148,6 +148,171 @@ dev.copy(png, 'rel_abund_dipo_season.png')
 dev.off()
 
 ###
+# Dipos and grass/shrubs
+###
+
+# read in transects file
+transects <- read.csv('data/Transect_04_09_totals.csv')
+
+# krat abundance by season, years 2002 through 2011
+dipos_04_09 <- filter(season_ordered, yr > 2002 & yr < 2011)
+
+# plotting only 2002 through 2011
+ggplot(dipos_04_09, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(color = species, fill = species)) +
+  facet_wrap(~plot, nrow = 6, ncol = 4)
+
+# save plot output as png
+dev.copy(png, 'dipos_02_11.png')
+dev.off()
+
+# adding percent column to plants
+dipos_pl_per <- transects %>% 
+  mutate(Prop*100)
+colnames(dipos_pl_per) = c("Year", "Plot", "Type", "Hits", "Prop", "Percent")
+
+season_04_09 <- function(year){
+  # function to add estimated season to year
+  if (year == '2004'){
+    season = '109'
+  } else {
+    season = '129'
+  }
+  return(season)
+}
+
+# adding season column to transect data
+year_list <- as.list(dipos_pl_per$Year)
+dipos_pl_per$Season <- rapply(year_list, season_04_09)
+
+
+# add plant abundance lines
+dipos_pl_per$Season <- as.numeric(dipos_pl_per$Season)
+dipos_pl_per$Prop <- as.numeric(dipos_pl_per$Prop)
+
+ggplot(dipos_04_09, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = dipos_pl_per, aes(x = Season, y = Prop, color = Type)) +
+  facet_wrap(~plot, nrow = 6, ncol = 4)
+
+# save plot output as png
+dev.copy(png, 'dipos_plants_04_09.png')
+dev.off()
+
+# plotting some of the individual plots to take a better look
+
+library(RColorBrewer)
+#trying with plot 1
+dipos_1 <- filter(dipos_04_09, plot == '1')
+transect_1 <- filter(dipos_pl_per, Plot == '1')
+transect_1$Prop <- as.numeric(transect_1$Prop)
+transect_1$Season <- as.numeric(transect_1$Season)
+
+ggplot(dipos_1, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_1, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 1")
+
+# plot2
+
+dipos_2 <- filter(dipos_04_09, plot == '2')
+transect_2 <- filter(dipos_pl_per, Plot == '2')
+
+ggplot(dipos_2, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_2, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 2")
+
+# plot 4
+
+dipos_4 <- filter(dipos_04_09, plot == '4')
+transect_4 <- filter(dipos_pl_per, Plot == '4')
+
+ggplot(dipos_4, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_4, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 4")
+
+# plot 8
+dipos_8 <- filter(dipos_04_09, plot == '8')
+transect_8 <- filter(dipos_pl_per, Plot == '8')
+
+ggplot(dipos_8, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_8, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 8")
+
+# plot 9
+
+dipos_9 <- filter(dipos_04_09, plot == '9')
+transect_9 <- filter(dipos_pl_per, Plot == '9')
+
+ggplot(dipos_9, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_9, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 9")
+
+# plot 11
+
+dipos_11 <- filter(dipos_04_09, plot == '11')
+transect_11 <- filter(dipos_pl_per, Plot == '11')
+
+ggplot(dipos_11, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_11, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 11")
+
+# plot 12
+
+dipos_12 <- filter(dipos_04_09, plot == '12')
+transect_12 <- filter(dipos_pl_per, Plot == '12')
+
+ggplot(dipos_12, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_12, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 12")
+
+#plot 14
+
+dipos_14 <- filter(dipos_04_09, plot == '14')
+transect_14 <- filter(dipos_pl_per, Plot == '14')
+
+ggplot(dipos_14, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_14, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 14")
+
+# plot 17
+
+dipos_17 <- filter(dipos_04_09, plot == '17')
+transect_17 <- filter(dipos_pl_per, Plot == '17')
+
+ggplot(dipos_17, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_17, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 17")
+
+# plot 22
+
+dipos_22 <- filter(dipos_04_09, plot == '22')
+transect_22 <- filter(dipos_pl_per, Plot == '22')
+
+ggplot(dipos_22, aes(x = season_id, y = rel_abund)) +
+  geom_bar(stat = "identity", aes(fill = species)) +
+  geom_line(data = transect_22, size = 2, aes(x = Season, y = Prop, color = Type)) +
+  scale_colour_grey() +
+  ggtitle("Plot 22")
+
+###
 # Explore krat relationship with PBs
 ###
 
@@ -192,3 +357,6 @@ ggplot(all_krat_PB, aes(x = period, y = count, color = species)) +
 # save plot output as png
 dev.copy(png, 'krat_PB_count_period.png')
 dev.off()
+
+
+
